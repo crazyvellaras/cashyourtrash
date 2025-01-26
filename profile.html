@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1b211;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .profile-container {
+            text-align: center;
+            background: #881dda;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .profile-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .profile-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Profile</h1>
+        <p id="name">Name: Loading...</p>
+        <p id="phone">Phone: Loading...</p>
+        <p id="email">Email: Loading...</p>
+    </div>
+
+    <script>
+        // Airtable API configuration
+        const airtableUrl = `https://api.airtable.com/v0/appJomjtXFyVtiDt4/Table%201`;
+        const airtableApiKey = "patTwPbTDf6iIHxFW.ed0efd4b8252edcc066ddde2185c37a1a4e329f60093eefa622d8e677229ad9b"
+
+        // Fetch data from Airtable and update the profile
+        async function fetchProfile() {
+            try {
+                const response = await fetch(`${airtableUrl}?maxRecords=1&view=Grid%20view`, {
+                    headers: {
+                        Authorization: `Bearer ${airtableApiKey}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch profile data: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const name = data.records[0]?.fields?.Name || "N/A";
+                const phone = data.records[0]?.fields?.Phone || "N/A";
+                const email = data.records[0]?.fields?.Email || "N/A";
+
+                // Update the profile page
+                document.getElementById("name").textContent = `Name: ${name}`;
+                document.getElementById("phone").textContent = `Phone: ${phone}`;
+                document.getElementById("email").textContent = `Email: ${email}`;
+            } catch (error) {
+                console.error("Error fetching profile data:", error.message);
+                alert("Failed to load profile information. Please try again.");
+            }
+        }
+
+        // Call the function to fetch profile data on page load
+        fetchProfile();
+    </script>
+</body>
+</html>

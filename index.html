@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #30c942;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            text-align: center;
+            background: #dc0909;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .login-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .login-container input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #f516c4;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .login-container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #e7b511;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #d6b20f;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <input type="email" id="emailInput" placeholder="Enter your email" required>
+        <input type="password" id="passwordInput" placeholder="Enter your password" required>
+        <button id="didntSignupButton">Didn't Signup</button>
+        <button id="loginButton">Login</button>
+    </div>
+    <script src="config.js"></script>
+    <script>      
+
+    //console.log(CONFIG.AIRTABLE_API_KEY);
+    //console.log(CONFIG.AIRTABLE_URL);
+
+
+        // Didn't Signup Button: Redirect to signup.html
+        document.getElementById("didntSignupButton").addEventListener("click", () => {
+            window.location.href = "signup.html";
+        });
+
+        // Login Button: Validate credentials
+        document.getElementById("loginButton").addEventListener("click", async () => {
+            const email = document.getElementById("emailInput").value.trim();
+            const password = document.getElementById("passwordInput").value.trim();
+
+            // Validate input fields
+            if (!email || !password) {
+                alert("Please fill in both email and password.");
+                return;
+            }
+
+            try {
+                // Fetch data from Airtable's first row
+                const response = await fetch(`${CONFIG.AIRTABLE_URL}?maxRecords=1&view=Grid%20view`, {
+                    headers: {
+                        Authorization: `Bearer ${CONFIG.AIRTABLE_API_KEY}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const storedEmail = data.records[0]?.fields?.Email || null;
+                const storedPassword = data.records[0]?.fields?.Password || null;
+
+                // Check credentials
+                if (email === storedEmail && password === storedPassword) {
+                    window.location.href = "home.html"; // Redirect to home page
+                } else {
+                    alert("Invalid credentials. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error validating login credentials:", error.message);
+                alert("An error occurred while processing your request. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

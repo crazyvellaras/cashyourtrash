@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #7ced9a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .wallet-container {
+            text-align: center;
+            background: #e23436;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .wallet-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .wallet-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .wallet-container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #33aecd;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .wallet-container button:hover {
+            background-color: #be15ed;
+        }
+        .input-container {
+            margin-top: 15px;
+            display: none;
+        }
+        .input-container input {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wallet-container">
+        <h1>Wallet</h1>
+        <p id="totalPoints">Total Points Earned: Loading...</p>
+        <button id="pointsToHeartsButton">Points to Hearts</button>
+        <p id="totalHearts" style="display: none;">Total Hearts: 0</p>
+        <button id="withdrawButton">Withdraw</button>
+        <div class="input-container" id="withdrawContainer">
+            <input type="number" id="withdrawInput" placeholder="Enter number of hearts">
+            <button id="proceedButton">Proceed</button>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script>
+
+// Fetch points from Airtable
+async function fetchPoints() {
+    try {
+        const response = await fetch(`${CONFIG.AIRTABLE_URL}?maxRecords=1&view=Grid%20view`, {
+            headers: {
+                Authorization: `Bearer ${CONFIG.AIRTABLE_API_KEY}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch points: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const points = data.records[0]?.fields?.Points || "0"; // Default to "0" if no points found
+        document.getElementById("totalPoints").textContent = `Total Points Earned: ${points}`;
+
+        // Convert points to hearts
+        let hearts = (parseFloat(points) * 2.1).toFixed(2); // Initial hearts value
+        const heartsElement = document.getElementById("totalHearts");
+
+        // Show hearts when converting
+        document.getElementById("pointsToHeartsButton").onclick = () => {
+            heartsElement.style.display = "block";
+            heartsElement.textContent = `Total Hearts: ${hearts}`;
+        };
+
+        // Show withdrawal input
+        document.getElementById("withdrawButton").onclick = () => {
+            document.getElementById("withdrawContainer").style.display = "block";
+        };
+
+        // Handle withdrawal
+        document.getElementById("proceedButton").onclick = () => {
+            const heartsToWithdraw = document.getElementById("withdrawInput").value;
+
+            if (!heartsToWithdraw || parseFloat(heartsToWithdraw) <= 0) {
+                alert("Please enter a valid number of hearts to withdraw.");
+                return;
+            }
+
+            if (parseFloat(heartsToWithdraw) > parseFloat(hearts)) {
+                alert("You don't have enough hearts to withdraw that amount.");
+                return;
+            }
+
+            // Deduct hearts
+            hearts = (parseFloat(hearts) - parseFloat(heartsToWithdraw)).toFixed(2);
+            heartsElement.textContent = `Total Hearts: ${hearts}`;
+
+            // Clear the input and hide the withdraw container
+            document.getElementById("withdrawInput").value = "";
+            document.getElementById("withdrawContainer").style.display = "none";
+
+            alert("Withdrawn successfully!");
+        };
+    } catch (error) {
+        console.error("Error fetching points from Airtable:", error.message);
+        alert("Failed to load wallet. Please try again.");
+    }
+}
+
+// Call the function to fetch points on page load
+fetchPoints();
+
+    </script>
+</body>
+</html>

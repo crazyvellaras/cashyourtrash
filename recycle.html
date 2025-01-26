@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycle</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #d21f8a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .recycle-container {
+            text-align: center;
+            background: #dde11c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(117, 234, 22, 0.2);
+            width: 300px;
+        }
+        .recycle-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .recycle-container input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #fa0505;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .recycle-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #08eaea;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .recycle-container button:hover {
+            background-color: #25e6e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="recycle-container">
+        <h1>Recycle Booking</h1>
+        <form id="recycleForm">
+            <input type="text" id="name" placeholder="Enter your name" required>
+            <input type="text" id="phone" placeholder="Enter your phone number" required>
+            <button type="submit">Book</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("recycleForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+
+            // Validate input fields
+            if (!name || !phone) {
+                alert("Please fill in all the fields.");
+                return;
+            }
+
+            // Show success message
+            alert("Successfully booked!");
+            
+            // Optionally, clear the form
+            document.getElementById("recycleForm").reset();
+        });
+    </script>
+</body>
+</html>

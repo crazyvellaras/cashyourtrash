@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #7917cf;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .home-container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .home-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .home-container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ed7a2e;
+            background-color: #c3f413;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .home-container button:hover {
+            background-color: #e50889;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <h1>Welcome to the Home Page</h1>
+        <button id="gameButton">Game</button>
+        <button id="recycleButton">Recycle</button>
+        <button id="walletButton">Wallet</button>
+        <button id="profileButton">Profile</button>
+        <button id="logoutButton">Logout</button>
+    </div>
+
+    <script>
+        document.getElementById("gameButton").addEventListener("click", () => {
+            window.location.href = "game.html"; // Redirect to the game page
+        });
+
+        document.getElementById("recycleButton").addEventListener("click", () => {
+            window.location.href = "recycle.html"; // Redirect to the recycle page
+        });
+
+        document.getElementById("walletButton").addEventListener("click", () => {
+            window.location.href = "wallet.html"; // Redirect to the wallet page
+        });
+
+        document.getElementById("profileButton").addEventListener("click", () => {
+            window.location.href = "profile.html"; // Redirect to the profile page
+        });
+
+        document.getElementById("logoutButton").addEventListener("click", () => {
+            alert("You have successfully logged out!");
+            window.location.href = "index.html"; // Redirect to the login page
+        });
+    </script>
+</body>
+</html>
